@@ -43,6 +43,7 @@ __all__ = [
     "dynamico",
     "fesom",
     "fvcom_tamar",
+    "mosart",
     "icon_soil",
     "lam_equator",
     "lam_falklands",
@@ -970,4 +971,55 @@ def ww3_global_tri() -> SampleUnstructuredXY:
         start_index=offset,
         name=name,
         units=units,
+    )
+
+@lru_cache(maxsize=LRU_CACHE_SIZE)
+def mosart() -> SampleUnstructuredXY:
+    """Download and cache unstructured surface sample data.
+
+    Load the MOSART unstructured hexagonal watershed mesh.
+
+    Returns
+    -------
+    SampleUnstructuredXY
+        The unstructured spatial coordinates and data payload.
+
+    Notes
+    -----
+    .. versionadded:: 0.1.0
+
+    """
+    sWorkspace_data = '/compyfs/liao313/e3sm_scratch/sag/e3sm20240103001/run'
+    sFilename_domain = '/compyfs/liao313/04model/e3sm/sag/cases_aux/e3sm20240103001/mosart_sag_domain.nc'
+    #fname = "mosart_hexwatershed.nc"
+    #processor = pooch.Decompress(method="auto", name=fname)
+    #resource = CACHE.fetch(f"{PANTRY_DATA}/{fname}.bz2", processor=processor)
+    dataset = nc.Dataset(sFilename_domain)
+
+    # load the lon/lat cell grid
+    lons = dataset.variables["xv"][:]
+    lats = dataset.variables["yv"][:]
+
+    #reshape to remove the second dimension
+    ni, nj, nv = lons.shape
+    lons = lons.reshape(ni, nv)
+    lats = lats.reshape(ni, nv)
+
+
+    # load the face/node connectivity
+    #connectivity = dataset.variables["face_nodes"][:]
+    connectivity = lons.shape
+
+    # load the mesh payload
+    sFilename_timeseries = sWorkspace_data + '/e3sm20240103001.mosart.h1.2019-01-02-00000.nc'
+    dataset = nc.Dataset(sFilename_timeseries)
+    data0 = dataset.variables["Main_Channel_Water_Depth_LIQ"]
+    #only take the first slice for static plot
+    data = data0[0,:]
+    #name = capitalise(data.standard_name)
+    name = 'MOSART main channel water depth'
+    units = data0.units
+
+    return SampleUnstructuredXY(
+        lons, lats, connectivity, data=data[:], name=name, units=units
     )
