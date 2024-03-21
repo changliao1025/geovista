@@ -974,7 +974,7 @@ def ww3_global_tri() -> SampleUnstructuredXY:
     )
 
 @lru_cache(maxsize=LRU_CACHE_SIZE)
-def mosart() -> SampleUnstructuredXY:
+def mosart(step: int | None = None) -> SampleUnstructuredXY:
     """Download and cache unstructured surface sample data.
 
     Load the MOSART unstructured hexagonal watershed mesh.
@@ -990,7 +990,9 @@ def mosart() -> SampleUnstructuredXY:
 
     """
     sWorkspace_data = '/compyfs/liao313/e3sm_scratch/sag/e3sm20240103001/run'
+    sWorkspace_data = '/Users/liao313/workspace/python/geovista/data/mosart'
     sFilename_domain = '/compyfs/liao313/04model/e3sm/sag/cases_aux/e3sm20240103001/mosart_sag_domain.nc'
+    sFilename_domain ='/Users/liao313/workspace/python/geovista/data/mosart/mosart_sag_domain.nc'
     #fname = "mosart_hexwatershed.nc"
     #processor = pooch.Decompress(method="auto", name=fname)
     #resource = CACHE.fetch(f"{PANTRY_DATA}/{fname}.bz2", processor=processor)
@@ -1003,23 +1005,20 @@ def mosart() -> SampleUnstructuredXY:
     #reshape to remove the second dimension
     ni, nj, nv = lons.shape
     lons = lons.reshape(ni, nv)
-    lats = lats.reshape(ni, nv)
-
-
-    # load the face/node connectivity
-    #connectivity = dataset.variables["face_nodes"][:]
-    connectivity = lons.shape
+    lats = lats.reshape(ni, nv)  
+    connectivity = lons.shape   
 
     # load the mesh payload
     sFilename_timeseries = sWorkspace_data + '/e3sm20240103001.mosart.h1.2019-01-02-00000.nc'
     dataset = nc.Dataset(sFilename_timeseries)
-    data0 = dataset.variables["Main_Channel_Water_Depth_LIQ"]
-    #only take the first slice for static plot
-    data = data0[0,:]
+    data = dataset.variables["Main_Channel_Water_Depth_LIQ"]
+    steps = dataset.dimensions["time"].size
+    idx = 0 if step is None else (step % steps)
+
     #name = capitalise(data.standard_name)
     name = 'MOSART main channel water depth'
-    units = data0.units
+    units = data.units
 
     return SampleUnstructuredXY(
-        lons, lats, connectivity, data=data[:], name=name, units=units
+        lons, lats, connectivity, data=data[idx], name=name, units=units, steps=steps
     )

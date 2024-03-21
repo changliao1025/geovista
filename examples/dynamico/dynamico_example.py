@@ -1,6 +1,7 @@
 import os, sys
 
 sPath_geovista = '/qfs/people/liao313/workspace/python/geovista/src'
+sPath_geovista = '/Users/liao313/workspace/python/geovista/src'
 sys.path.append(sPath_geovista)
 import geovista as gv
 from geovista.pantry.data import dynamico

@@ -3,20 +3,15 @@ import os, sys
 sPath_geovista = '/qfs/people/liao313/workspace/python/geovista/src'
 sPath_geovista = '/Users/liao313/workspace/python/geovista/src'
 sys.path.append(sPath_geovista)
-
 import geovista as gv
-
-from geovista.pantry.data import mosart
+from geovista.pantry.data import fesom
 import geovista.theme
 
-# Load the sample data.
-
-sample = mosart()
+# Load sample data.
+sample = fesom()
 
 # Create the mesh from the sample data.
-
 mesh = gv.Transform.from_unstructured(sample.lons, sample.lats, data=sample.data)
-
 
 # Plot the mesh.
 plotter = gv.GeoPlotter()
