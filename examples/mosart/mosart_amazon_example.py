@@ -8,8 +8,12 @@ import netCDF4 as nc
 sPath = str( Path().resolve(2) )
 print(sPath)
 iFlag_platform = 3
-iFlag_monthly = 1
-sVariable = 'FLOODED_FRACTION'
+iFlag_monthly = 0
+if iFlag_monthly ==1:
+    sVariable = 'FLOODED_FRACTION'
+else:
+    sVariable = 'Main_Channel_Water_Depth_LIQ'
+    
 sCase = 'e3sm20240102001'
 
 if iFlag_platform == 1:
@@ -27,8 +31,9 @@ else:
            sWorkspace_data = realpath( sPath +  '/data/mosart/amazon' )
            sWorkspace_data_aux = sWorkspace_data
        else:
-           sWorkspace_data = r"Z:\e3sm_scratch\amazon\\" + sCase  + r"\run"
-           sWorkspace_data_aux = r"Z:\04model\e3sm\amazon\cases_aux\\" + sCase  
+           sWorkspace_data_aux = os.path.join(r"Z:\04model\e3sm\amazon\cases_aux" , sCase  )
+           sWorkspace_data = os.path.join( r"Z:\e3sm_scratch\amazon" , sCase  ,  "run" )
+           
 
 sys.path.append(sPath_geovista)
 
@@ -38,7 +43,10 @@ import geovista.theme
 # Load the sample data.
 
 sFilename_domain = sWorkspace_data_aux + '/mosart_amazon_domain.nc'
-sFilename_timeseries = sWorkspace_data + '/e3sm20240102001.mosart.h0.2019-01.nc'
+if iFlag_monthly ==1:
+    sFilename_timeseries = os.path.join( sWorkspace_data , 'e3sm20240102001.mosart.h0.2019-01.nc')
+else:
+    sFilename_timeseries = os.path.join( sWorkspace_data , 'e3sm20240102001.mosart.h1.2019-01-02-00000.nc')
 
 dataset = nc.Dataset(sFilename_domain)
 # load the lon/lat cell grid
@@ -49,6 +57,11 @@ ni, nj, nv = lons.shape
 lons = lons.reshape(ni, nv)
 lats = lats.reshape(ni, nv)  
 connectivity = lons.shape   
+#check the file existing or not
+if not os.path.exists(sFilename_timeseries):
+    print(sFilename_timeseries)
+    exit
+
 dataset = nc.Dataset(sFilename_timeseries)
 data = dataset.variables[sVariable]
 name = sVariable.capitalize()
