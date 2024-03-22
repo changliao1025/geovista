@@ -4,25 +4,30 @@ import netCDF4 as nc
 import numpy as np
 
 sPath_geovista = '/Users/liao313/workspace/python/geovista/src'
+sPath_geovista = '/qfs/people/liao313/workspace/python/geovista/src'
 sys.path.append(sPath_geovista)
 import geovista
 import geovista.theme
 
 
-ds = nc.Dataset("/Users/liao313/workspace/python/geovista/data/mosart/mosart_sag_domain.nc")
+#ds = nc.Dataset("/Users/liao313/workspace/python/geovista/data/mosart/mosart_sag_domain.nc")
+ds = nc.Dataset("/compyfs/liao313/04model/e3sm/amazon/cases_aux/e3sm20240102001/mosart_amazon_domain.nc")
 xv = ds.variables["xv"][:]
 yv = ds.variables["yv"][:]
 xv = xv[:, 0]
 yv = yv[:, 0]
 
-ds = nc.Dataset("/Users/liao313/workspace/python/geovista/data/mosart/e3sm20240103001.mosart.h1.2019-01-02-00000.nc")
+#ds = nc.Dataset("/Users/liao313/workspace/python/geovista/data/mosart/e3sm20240103001.mosart.h1.2019-01-02-00000.nc")
+ds = nc.Dataset("/compyfs/liao313/e3sm_scratch/amazon/e3sm20240102001/run/e3sm20240102001.mosart.h1.2019-01-02-00000.nc")
 name = "RIVER_DISCHARGE_OVER_LAND_LIQ"
+name = 'FLOODED_FRACTION'
+name = 'Main_Channel_Water_Depth_LIQ'
 var = ds.variables[name]
 data = var[:]
 n_steps = data.shape[0]
 
 clim = data.min(), data.max()
-clim = (1.0, 150.0)
+clim = (0.0, 150.0)
 
 time = ds.variables["time"]
 fmt = "%Y-%m-%d"
@@ -34,7 +39,7 @@ scalars = "data"
 
 plotter = geovista.GeoPlotter(off_screen=True)
 
-plotter.open_movie("movie.mp4")
+plotter.open_movie("movie_flood.mp4")
 
 text = dt[t].strftime(fmt)
 actor = plotter.add_text(
