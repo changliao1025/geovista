@@ -4,18 +4,18 @@ from os.path import realpath
 import numpy as np
 import netCDF4 as nc
 
-#you only need change the path to the package if if it is not installed in your python environment, 
+#you only need change the path to the package if if it is not installed in your python environment,
 #this is for testing purpose
 sPath = str( Path().resolve(2) )
 print(sPath)
-iFlag_platform = 3 #debug from window
-iFlag_monthly = 0 #only check monthly data
+iFlag_platform = 1 #debug from window
+iFlag_monthly = 1 #only check monthly data
 if iFlag_monthly ==0:
     sVariable = 'FLOODED_FRACTION'
     sVariable = 'Main_Channel_Water_Depth_LIQ'
 else:
     sVariable = 'Main_Channel_Water_Depth_LIQ'
-    
+
 sCase = 'e3sm20240102001'
 sYear = '2019'
 
@@ -29,10 +29,10 @@ else:
        sWorkspace_data = realpath( sPath +  '/data/mosart/amazon' )
        sWorkspace_data_aux = sWorkspace_data
     else:
-       sPath_geovista = 'C:\workspace\python\geovista\src'  #windows, we may also use mapped driver as data source       
+       sPath_geovista = 'C:\workspace\python\geovista\src'  #windows, we may also use mapped driver as data source
        sWorkspace_data_aux = os.path.join(r"Z:\04model\e3sm\amazon\cases_aux" , sCase  )
        sWorkspace_data = os.path.join( r"Z:\e3sm_scratch\amazon" , sCase  ,  "run" )
-           
+
 
 sys.path.append(sPath_geovista)
 
@@ -56,8 +56,8 @@ lats = dataset.variables["yv"][:]
 #reshape to remove the second dimension
 ni, nj, nv = lons.shape
 lons = lons.reshape(ni, nv)
-lats = lats.reshape(ni, nv)  
-connectivity = lons.shape   
+lats = lats.reshape(ni, nv)
+connectivity = lons.shape
 #check the file existing or not
 if not os.path.exists(sFilename_timeseries):
     print(sFilename_timeseries)
@@ -73,7 +73,7 @@ t = 0
 mesh = gv.Transform.from_unstructured(lons, lats, data=data[t])
 # Plot the mesh.
 plotter = gv.GeoPlotter()
-sargs = {"title": f"{name} / {units}", 
+sargs = {"title": f"{name} / {units}",
        "shadow": True,    "title_font_size": 10,    "label_font_size": 10,    "fmt": "%.1f",
 }
 plotter.add_mesh(mesh, scalar_bar_args=sargs)
