@@ -8,7 +8,7 @@ import netCDF4 as nc
 #this is for testing purpose
 sPath = str( Path().resolve(2) )
 print(sPath)
-iFlag_platform = 1 #debug from window
+iFlag_platform = 3 #debug from window
 iFlag_monthly = 1 #only check monthly data
 if iFlag_monthly ==0:
     sVariable = 'FLOODED_FRACTION'
@@ -16,7 +16,7 @@ if iFlag_monthly ==0:
 else:
     sVariable = 'Main_Channel_Water_Depth_LIQ'
 
-sCase = 'e3sm20240102001'
+sCase = 'e3sm20240102002'
 sYear = '2019'
 
 if iFlag_platform == 1:

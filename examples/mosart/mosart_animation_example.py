@@ -9,15 +9,16 @@ print(sPath)
 iFlag_platform = 3
 iFlag_monthly = 1
 sVariable = 'FLOODED_FRACTION'
+sVariable = 'Main_Channel_Water_Depth_LIQ'
 #sVariable = 'Main_Channel_Water_Depth_LIQ'
 
 #clim = (0.0, 1.0) #change limit if needed
-    
-sCase = 'e3sm20240102001' #diffusive wave method
+
+sCase = 'e3sm20240102002' #diffusive wave method
 #sCase = 'e3sm20240102002' #kinetic wave method
 #sCase = 'e3sm20240102003' #kinetic wave method with 50 twid
 iYear_start = 2000
-iYear_end = 2019
+iYear_end = 2009
 
 sYear_start = '{:04}'.format(iYear_start)
 sYear_end = '{:04}'.format(iYear_end)
@@ -32,7 +33,7 @@ else:
         sWorkspace_data = realpath( sPath +  '/data/mosart/amazon' )
         sWorkspace_data_aux = sWorkspace_data
     else:
-        sPath_geovista = 'C:\workspace\python\geovista\src'  #windows, we may also use mapped driver as data source              
+        sPath_geovista = 'C:\workspace\python\geovista\src'  #windows, we may also use mapped driver as data source
         sWorkspace_data = os.path.join( r"Z:\e3sm_scratch\amazon" , sCase  ,  "run" )
         sWorkspace_data_aux = os.path.join(r"Z:\04model\e3sm\amazon\cases_aux" , sCase  )
         sWorkspace_analysis = os.path.join(r"Z:\04model\e3sm\amazon\analysis" , sCase  )
